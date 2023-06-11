@@ -13,7 +13,6 @@
 void r_encoder_increment(){
     if (encoder_r_B.read() == 0){
         distance_r += MMPP;
-        //speed_r = MMPP/(root_timer.read() - encoder_updated_time_r);
         direction += RADPP;
         position_x += (MMPP/2)*cos(direction);
         position_y += (MMPP/2)*sin(direction);
@@ -21,21 +20,18 @@ void r_encoder_increment(){
         r_encoder_incremented_num++;
     }else{
         distance_r -= MMPP;
-        //speed_r = - MMPP/(root_timer.read() - encoder_updated_time_r);
         direction -= RADPP;
         position_x -= (MMPP/2)*cos(direction);
         position_y -= (MMPP/2)*sin(direction);
 
         r_encoder_incremented_num--;
     }
-    //encoder_updated_time_r = root_timer.read();
 }
 
 // 左エンコーダーのインクリメント
 void l_encoder_increment(){
     if (encoder_l_B.read() == 0){
         distance_l += MMPP;
-        //speed_l = MMPP/(root_timer.read() - encoder_updated_time_l);
         direction -= RADPP;
         position_x += (MMPP/2)*cos(direction);
         position_y += (MMPP/2)*sin(direction);
@@ -43,25 +39,23 @@ void l_encoder_increment(){
         l_encoder_incremented_num++;
     }else{
         distance_l -= MMPP;
-        //speed_l = - MMPP/(root_timer.read() - encoder_updated_time_l);
         direction += RADPP;
         position_x -= (MMPP/2)*cos(direction);
         position_y -= (MMPP/2)*sin(direction);
 
         l_encoder_incremented_num--;
     }
-    //encoder_updated_time_l = root_timer.read();
 }
 
 
 void encoder_interval(){
+    //速度の更新
     speed_l = l_encoder_incremented_num*MMPP/(root_timer.read() - encoder_updated_time);
     speed_r = r_encoder_incremented_num*MMPP/(root_timer.read() - encoder_updated_time);
 
     l_encoder_incremented_num=0;
     r_encoder_incremented_num=0;
     encoder_updated_time = root_timer.read();
-    
 }
 
 
