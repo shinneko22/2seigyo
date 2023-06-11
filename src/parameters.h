@@ -8,7 +8,7 @@
 
 // 物理パラメータ (値はまだテキトー)
 
-#define ENC_RES_MAX (48) //ロータリエンコーダーの分解能
+#define ENC_RES_MAX (500) //ロータリエンコーダーの分解能
 #define TIRE_DIAMETER	(88.0f)				//タイヤの直径	[mm]
 #define TIRE_RADIUS	(TIRE_DIAMETER/2.0f)		//タイヤの半径	[mm]
 #define TIRE_TRED (364.0f) //左右タイヤ接地面の中心間の距離[mm]
@@ -21,7 +21,8 @@
 
 
 //PID制御のゲイン (値はまだテキトー) 今はPだけにしてある
-#define SPEED_KP (0.001f) //速度調整のPゲイン
+//#define SPEED_KP (0.001f) //速度調整のPゲイン
+#define SPEED_KP (0.0f) //速度調整のPゲイン
 #define SPEED_KI (0.0f) //速度調整のIゲイン
 #define SPEED_KD (0.0f) //速度調整のDゲイン
 
