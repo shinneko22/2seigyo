@@ -46,15 +46,17 @@ void l_encoder_increment(){
 
 //モーターの制御
 void motor_interval(){
-    float u_speed, u_turn;
-    u_speed = 0;
+    float u_turn, u_speed;
     u_turn = 0;
+    u_speed = 0;
 
     if(run_mode==STRAIGHT_MODE || run_mode==TURN_MODE){
         //左右モーターの平均のスピードをPID制御で調整する．
         float speed;
-        speed = (speed_r+speed_l)/2; //
-        u_speed = pid_speed.kp * (target_speed - speed) + pid_speed.ki * pid_speed.integral - pid_speed.kd * ((target_speed - speed) - pid_speed.before); //操作量(-1~1)
+        speed = (speed_r+speed_l)/2;
+
+        //操作量 = 速度目標*係数 + PID補正
+        u_speed = SPEED_UNIT * target_speed + pid_speed.kp * (target_speed - speed) + pid_speed.ki * pid_speed.integral - pid_speed.kd * ((target_speed - speed) - pid_speed.before);
         pid_speed.before = target_speed - speed;
         pid_speed.integral += target_speed - speed;
     }
@@ -63,7 +65,7 @@ void motor_interval(){
         //直進時のモーターの左右のPWM比に関する制御
         //とりあえずつねに左右差0とする
         //これで曲がったりしたらspeed_r-speed_l→0となるようにPID制御する(pid_straight)
-        u_turn=0; 
+        u_turn=0;
     }else if(run_mode==TURN_MODE){
         //目標の進行方向との差についてPID制御する.
         float e; //偏差
@@ -74,10 +76,9 @@ void motor_interval(){
     }
 
     //ここからPWM書き込み
-    float u_r, u_l; //左右の操作量
+    float u_r, u_l;
     u_r = u_speed*(1+u_turn);
     u_l = u_speed*(1-u_turn);
-    printf("speed:%d\n", int(u_speed*10000));
 
     if(u_r > MAX_PWM){
         pwm_r = MAX_PWM;
@@ -145,6 +146,7 @@ void init(){
     target_speed=0;
     target_direction=0;
 
+
     //とりあえずPIDゲインを初期化しておく
     pid_speed = {SPEED_KP,SPEED_KI,SPEED_KD,0,0}; //速度
     //pid_straight = {STRAIGHT_KP,STRAIGHT_KI,STRAIGHT_KD,0,0,0}; //直進 (未使用)
@@ -164,9 +166,5 @@ int main() {
     start_straight(100);
     while(1){
         motor_interval();
-        l_encoder_increment();
-        r_encoder_increment();
-        printf("%d\n", int(speed_r+speed_l));
-        printf("%d\n", int(10000*pwm_r));
     }
 }

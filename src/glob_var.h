@@ -23,7 +23,6 @@ float direction; // ロボットの方向 [rad] (まだ未使用)
 float target_speed; // モーター目標速度 [m/s]
 float target_direction; // 目標方向 [rad]
 
-
 unsigned int run_mode; // 0:停止 1:直進 2:カーブ (3:信地旋回 4:超信地旋回)
 
 //PIDコントローラー
